@@ -2,11 +2,10 @@ require 'rubygems'
 require 'require_relative'
 require 'net/http'
 require 'open-uri'
+require 'fileutils'
 
 require_relative '../lib/plist_generator.rb'
-require_relative '../lib/local_upload.rb'
 require_relative '../lib/ipa_search.rb'
-require_relative '../lib/mail_parser.rb'
 require_relative '../lib/mailer.rb'
 require_relative '../lib/data_from_ipa.rb'
 
@@ -14,40 +13,30 @@ class OtabuilderWrapper<Jenkins::Tasks::Publisher
 
   include Jenkins::Model::DescribableNative
 
-  display_name 'Upload Build and Mail OTA link'
+  display_name 'Upload Build and Generate OTA link'
 
   attr_accessor :ipa_path
   attr_accessor :bundle_identifier
   attr_accessor :bundle_version
   attr_accessor :title
   attr_accessor :local_ota_dir
-  attr_accessor :reciever_mail_id
   attr_accessor :http_root
-  attr_accessor :mail_body
-  attr_accessor :mail_subject
-  attr_accessor :reply_to
-  attr_accessor :bcc
 
   def initialize(attrs)
     @ipa_path = attrs['ipa_path']
     @local_ota_dir = attrs['local_ota_dir']
-    @reciever_mail_id = attrs['reciever_mail_id']
     @http_root = attrs['http_root']
-    @mail_subject = attrs['mail_subject']
-    @reply_to = attrs['reply_to']
-    @mail_body  = attrs['mail_body']
-    @bcc = attrs['bcc']
   end
 
   def needsToRunAfterFinalized
     return true
   end
 
-  def prebuild(build,listner)
+  def prebuild(build, listener)
   end
 
 
-  def perform(build,launcher,listner)
+  def perform(build, launcher, listener)
 
       #project informations
       workspace_path = build.native.getProject.getWorkspace() #get the workspace path
@@ -78,76 +67,33 @@ class OtabuilderWrapper<Jenkins::Tasks::Publisher
 
       manifest_file = Manifest::create ipa_url,icon_url, @bundle_identifier, @bundle_version, @title, File.dirname(ipa_filepath)
 
-      project = {
-                  :name => project,
-                  :build_number => build_number
-                }
-
-      #begin
-        LocalHost::upload @local_ota_dir, project, [ipa_filepath, manifest_file, @icon_path]
-      #rescue
-       # listner.error "FTP Connection Refused, check the FTP Settings"
-       # build.halt
-       #end
-
-      #Test this part is working
-
-      #If above works, delete the following parts
-
       manifest_filename = File.basename manifest_file
       itms_link = "itms-services://?action=download-manifest&url=#{@http_root}#{project}/#{build_number}/#{manifest_filename}"
-      itms_link = itms_link.gsub /\s*/,''
+      itms_link = itms_link.gsub(/\s*/, '')
 
-      listner.info itms_link
-      mail_body = @mail_body
-      mail_body = MailParser::substitute_variables mail_body do
-        [
-          {
-            :replace=>"{itms_link}",
-            :with=>itms_link
-          },
-          {
-            :replace=>"{build_number}",
-            :with=>build_number
-          },
-          {
-            :replace=>"{project}",
-            :with=>project
-          }
-        ]
+      listener.info itms_link
+
+      output_path = File.join @local_ota_dir, project, build_number
+
+      FileUtils.mkdir_p output_path
+
+      [ipa_filepath, manifest_file, @icon_path].each do |file|
+        FileUtils.cp file, File.join(output_path File.basename(file)) unless file.nil?
       end
 
-      #mailing information
-      mail_body = MailParser::get_html mail_body
+      File.open(File.join(output_path, "index.html"), "w") { |file| file.write("
+<html>
+    <head>
+        <title>#{@title} #{@bundle_version}</title>
+    </head>
+    <body>
+        <a href=\"#{itms_link}\">
+            Click here to install #{@title} #{@bundle_version}.
+        </a>
+    </body>
+</html>
+") }
 
-      mail_subject = MailParser::substitute_variables @mail_subject do
-        [
-          {
-            :replace=>"{build_number}",
-            :with=>build_number
-          },
-          {
-            :replace=>"{project}",
-            :with=>project
-          }
-        ]
-      end
-
-
-      mail = JenkinsMail.new
-
-      mail.compose do
-        {
-          :to =>  @reciever_mail_id,
-          :from => @sender_mail_id,
-          :subject =>  mail_subject,
-          :html_body=> mail_body,
-          :reply_to=> @reply_to,
-          :bcc=> @bcc
-        }
-      end
-
-      mail.send
   end
 
 end
