@@ -1,67 +1,48 @@
 <%
   f = taglib('lib/form')
   f.block do
-  	f.entry(:title=>'IPA File Path',
-  			:field=>'ipa_path',
-  			:description=>'You need to tell the IPA files path along with the file name which needs to be uploaded to ftp-server and OTA link to be mailed. Defaults to workspace if nothing is provided'
-  		   ) do  
-  		   	f.textbox #, :default'${WORKSPACE}'
+    f.entry(:title=>'IPA File Path',
+            :field=>'ipa_path',
+            :description=>'You need to tell the IPA files path along with the file name which needs to be uploaded to ftp-server and OTA link to be mailed.'
+            ) do f.textbox :clazz=>'required'
     end
-        
-    f.entry(:title=>'FTP OTA Directory',
-    		:field=>'ftp_ota_dir',
-    		:description=>'Enter the ftp directory in which the ota build link is to be saved'
-    		) do f.textbox :clazz=>'required'
-    end
-    
-    f.entry(:title=>'FTP Hostname',
-    		:field=>'ftp_host',
-    		:description=>'Enter the ftp hostname here'
-    		) do f.textbox :clazz=>'required'
-    end
-    
-    f.entry(:title=>'FTP Username',
-    		:field=>'ftp_user',
-    		:description=>'Enter the ftp username here'
-    		) do f.textbox :clazz=>'required'
-    end
-    
-    f.entry(:title=>'FTP Password',
-    		:field=>'ftp_password',
-    		:description=>'Enter the ftp hostname here'
-    		) do f.password :clazz=>'required'
-    end
-    
 
-    f.entry(:title=>'HTTP Translation Link',
-    		:field=>'http_translation'
-    		)do f.textbox :clazz=>'required'
+    f.entry(:title=>'Local OTA Directory',
+            :field=>'local_ota_dir',
+            :description=>'Enter the directory in which the ota build link is to be saved'
+            ) do f.textbox :clazz=>'required'
     end
-    
+
+
+    f.entry(:title=>'HTTP Root',
+            :field=>'http_root'
+            ) do f.textbox :clazz=>'required'
+    end
+
     f.entry(:title=>'Reciever Mail Address',
-    		:field=>'reciever_mail_id'
-    		) do f.textbox :clazz=>'required'
+            :field=>'reciever_mail_id'
+            ) do f.textbox :clazz=>'required'
     end
-    
+
     f.entry(:title=>'BCC',
-    		:field=>'bcc'
-    		) do f.textbox 
+            :field=>'bcc'
+            ) do f.textbox
     end
-	
-	f.entry(:title=>'Mail Subject',
-			:field=>'mail_subject'
-			) do f.textbox :clazz=>'required'
-	end
-	
-	f.entry(:title=>'Reply To',
-			:field=>'reply_to'
-			)do f.textbox
-	end
-	
-	f.entry(:title=>'Email Content',
-    		:description=>'Enter the content for your email here, add {itms_link} where you want the itms link to be added. Also you can make use of {build_number} and {project}. It can be in Markdown',
-    		:field=>'mail_body'
-    		)do f.textarea
+
+    f.entry(:title=>'Mail Subject',
+            :field=>'mail_subject'
+            ) do f.textbox :clazz=>'required'
+    end
+
+    f.entry(:title=>'Reply To',
+            :field=>'reply_to'
+            ) do f.textbox
+    end
+
+    f.entry(:title=>'Email Content',
+            :description=>'Enter the content for your email here, add {itms_link} where you want the itms link to be added. Also you can make use of {build_number} and {project}. It can be in Markdown',
+            :field=>'mail_body'
+            ) do f.textarea
     end
   end
 %>
