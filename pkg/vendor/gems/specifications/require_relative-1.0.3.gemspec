@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# stub: require_relative 1.0.3 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "require_relative"
@@ -11,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = ["steve@steveklabnik.com", "whateley@gmail.com"]
   s.homepage = "http://steveklabnik.github.com/require_relative"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.15"
+  s.rubygems_version = "2.1.9"
   s.summary = "This backports require_relative to Ruby 1.8."
 
   if s.respond_to? :specification_version then

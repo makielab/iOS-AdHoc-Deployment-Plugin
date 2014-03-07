@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# stub: plist 3.1.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "plist"
@@ -12,15 +13,6 @@ Gem::Specification.new do |s|
   s.homepage = "http://plist.rubyforge.org"
   s.require_paths = ["lib"]
   s.rubyforge_project = "plist"
-  s.rubygems_version = "1.8.15"
+  s.rubygems_version = "2.1.9"
   s.summary = "All-purpose Property List manipulation library."
-
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-    else
-    end
-  else
-  end
 end

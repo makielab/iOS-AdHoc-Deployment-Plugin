@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# stub: slop 3.0.4 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "slop"
@@ -11,15 +12,6 @@ Gem::Specification.new do |s|
   s.email = "lee@jarvis.co"
   s.homepage = "http://github.com/injekt/slop"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.15"
+  s.rubygems_version = "2.1.9"
   s.summary = "Option gathering made easy"
-
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-    else
-    end
-  else
-  end
 end

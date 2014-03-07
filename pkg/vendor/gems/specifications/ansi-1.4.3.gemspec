@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# stub: ansi 1.4.3 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "ansi"
@@ -13,7 +14,7 @@ Gem::Specification.new do |s|
   s.files = ["HISTORY.rdoc", "DEMO.rdoc", "COPYING.rdoc", "README.rdoc"]
   s.homepage = "http://rubyworks.github.com/ansi"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.15"
+  s.rubygems_version = "2.1.9"
   s.summary = "ANSI at your fingertips!"
 
   if s.respond_to? :specification_version then

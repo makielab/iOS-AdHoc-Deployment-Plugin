@@ -1,0 +1,68 @@
+require 'fileutils'
+module Jenkins
+  module War
+    VERSION = '1.514'
+    LOCATION = File.expand_path(File.join(File.dirname(__FILE__), "jenkins.war"))
+
+    module_function
+
+    def unpack(dest_dir, output = $stdout)
+      target = File.dirname(dest_dir).tap do |dir_of_dest_dir|
+        raise "'#{dir_of_dest_dir}' is not a directory" unless File.directory?(dir_of_dest_dir)
+      end
+      FileUtils.mkdir_p dest_dir
+      Dir.chdir(dest_dir) do
+        sh "jar xvf #{LOCATION}", output
+      end
+    end
+
+    def cp(dest, output = $stdout)
+      FileUtils.cp(LOCATION, dest)
+      output << "copied #{LOCATION} -> #{dest}\n"
+    end
+
+    def server(options, output = $stdout)
+      home = options.home || File.join(ENV['HOME'], ".jenkins", "server")
+      port = options.port.to_i || 3001
+      control = options.control.to_i || 3002
+      daemon = options.daemon
+      kill = options.kill
+      logfile = options.logfile
+
+      if kill
+        require 'socket'
+        TCPSocket.open("localhost", control) do |sock|
+          sock.write("0")
+        end
+      else
+        javatmp = File.join(home, "javatmp")
+        FileUtils.mkdir_p javatmp
+        ENV['HUDSON_HOME'] = home
+        cmd = ["java", "-Djava.io.tmpdir=#{javatmp}", "-jar", LOCATION]
+        cmd << "--daemon" if daemon
+        cmd << "--logfile=#{File.expand_path(logfile)}" if logfile
+        cmd << "--httpPort=#{port}"
+        cmd << "--controlPort=#{control}"
+        output << "#{cmd.join(" ")}\n"
+        exec(*cmd)
+      end
+    end
+
+    def classpath
+      dest_dir = File.join(ENV['HOME'], '.jenkins', 'wars', VERSION)
+      if File.directory?(dest_dir)
+        "#{dest_dir}/WEB-INF/lib/jenkins-core-#{VERSION}.jar"
+      else
+        FileUtils.mkdir_p(dest_dir)
+        unpack(dest_dir, [])
+        classpath
+      end
+    end
+
+    def sh(command, output = $stdout)
+      output << command + "\n"
+      output << result = `#{command}`
+      raise result unless $?.success?
+    end    
+  end
+end
