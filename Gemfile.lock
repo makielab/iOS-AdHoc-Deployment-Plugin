@@ -1,37 +1,40 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    CFPropertyList (2.2.0)
+    CFPropertyList (2.2.7)
     ansi (1.4.3)
-    bouncy-castle-java (1.5.0146.1)
-    i18n (0.6.1)
-    jenkins-plugin-runtime (0.2.2)
+    bouncy-castle-java (1.5.0147)
+    jenkins-plugin-runtime (0.2.3)
       json
       slop (~> 3.0.2)
-    jruby-openssl (0.8.1)
-      bouncy-castle-java (>= 1.5.0146.1)
-    json (1.7.5)
-    json (1.7.5-java)
-    mail (2.5.3)
-      i18n (>= 0.4.0)
+    jenkins-war (1.514)
+    jpi (0.4.0)
+      bundler
+      jenkins-plugin-runtime (~> 0.2.3)
+      jenkins-war (> 1.427)
+      rubyzip (~> 1.1.0)
+      thor
+    jruby-openssl (0.9.4)
+      bouncy-castle-java (>= 1.5.0147)
+    json (1.8.1-java)
+    mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    maruku (0.6.1)
-      syntax (>= 1.0.0)
-    mime-types (1.19)
+    maruku (0.7.1)
+    mime-types (1.25.1)
     plist (3.1.0)
-    polyglot (0.3.3)
-    pony (1.4)
-      mail (> 2.0)
+    polyglot (0.3.4)
+    pony (1.8)
+      mail (>= 2.0)
     require_relative (1.0.3)
-    rubytest (0.5.2)
+    rubytest (0.7.0)
       ansi
-    rubyzip (0.9.9)
+    rubyzip (1.1.0)
     slop (3.0.4)
-    syntax (1.0.0)
-    test (0.3.1)
+    test (1.0.0)
       rubytest
-    treetop (1.4.12)
+    thor (0.18.1)
+    treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
 
@@ -42,6 +45,7 @@ DEPENDENCIES
   CFPropertyList
   ansi
   jenkins-plugin-runtime (~> 0.2.0)
+  jpi
   jruby-openssl
   maruku
   plist
